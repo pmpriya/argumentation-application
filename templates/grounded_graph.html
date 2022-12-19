@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" media="all" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style1.css') }}" media="all" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title> Dung Graph Framework </title>
+</head>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<body>
+<div class = "container">
+		<div class="pb-2 mt-4 mb-2 border-bottom">
+		<h3 onclick="window.location.href='{{ url_for('index',page=1) }}';"> ARGUPEDIA </h3> </div>
+        <button type="button" class = "btn btn-light float-end btn-space" onclick="window.location.href='{{ url_for('logout') }}';"> Logout </button>
+        <button type="button" class = "btn btn-light float-end btn-space" onclick="window.location.href='{{ url_for('index',page=1) }}';"> Home </button>
+
+<div class = "center">
+    <div class="challenge"> VISUALIZING GROUNDED LABELLING </div> </div>
+    <div id = "labelin" class = "nodes1"> Winning Arguments: {{ args.label_in }} </div>
+    <div id = "labelout" class = "nodes"> Losing Arguments: {{ args.label_out }} </div>
+    <div id = "labelundec" class = "nodes"> Undecided Arguments: {{ args.label_undec }} </div>
+
+<svg id="graph" width="800" height="800"></svg>
+</div>
+</body>
+
+<style>
+
+    .links line {
+    stroke-opacity: 0.6;
+    stroke-width: 1px;
+    fill:none;
+
+    }
+
+    .nodes circle {
+
+    stroke: #333;
+    stroke-width: 1.5px;
+    }
+
+    .nodes {
+    color: #FFFFFF;
+    }
+
+    .nodes1 {
+    margin-top: 200px;
+    color: #FFFFFF;
+    }
+
+
+.center {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+.challenge {
+  font-family: "Poppins-Regular";
+  color: #FFFFFF;
+  text-align: center;
+  font-size: calc(1.275rem + .3vw);
+  margin-top: -5.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+   }
+
+     body {
+ background-image: url( {{ url_for('static', filename='images/background4.jpeg') }});
+}
+
+</style>
+
+<script type="text/javascript">
+
+
+     var svg = d3.select("svg");
+
+    var width = svg.attr("width");
+    var height = svg.attr("height");
+
+    svg = svg.call(d3.zoom().on("zoom", zoomed)).append("g");
+
+    svg.append("defs").append("marker")
+		    .attr("id", "arrow")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 20)
+        .attr("refY", 0)
+        .attr("markerWidth", 8)
+        .attr("markerHeight",8)
+        .attr("orient", "auto")
+    .append("svg:path")
+  	    .attr("d", "M0, -5L10,0L0,5");
+
+var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+var simulation = d3.forceSimulation()
+		.force("link", d3.forceLink().id(function(d) {return d.id; }))
+        .force("charge", d3.forceManyBody())
+        .force("center", d3.forceCenter(width/2, height/2));
+
+function createGraph(error, graph) {
+	if(error) throw error;
+
+  var link = svg.append("g")
+  		.attr("class", "links")
+        .selectAll("line")
+        .data(graph.links)
+      .enter().append("line")
+      	.attr("stroke", function(d) {return color(d.type); })
+        .attr("marker-end", "url(#arrow)");
+
+	var node = svg.append("g")
+  	    .attr("class", "nodes")
+     .selectAll("circle")
+     .data(graph.nodes)
+     .enter().append("circle")
+     		.attr("r",10)
+       //  .attr("fill", function(d) { if (d.root == "true") return color(d.root); return color(d.type); })
+       .attr("fill", function(d) { if (d.type == 1) return color(d.id); return color(d.type); })
+
+        .call(d3.drag()
+        		.on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
+
+	var text = svg.append("g").attr("class", "labels").selectAll("g")
+  		.data(graph.nodes)
+    .enter().append("g");
+
+ text.append("text")
+ 		 .attr("x", 14)
+     .attr("y", ".31em")
+     .style("font-family", "sans-serif")
+     .style("font-size", "0.7em")
+     .style("fill", "white")
+     .text(function(d) {return d.id; });
+
+ node.on("click", function(d) {
+ 		console.log("clicked", d.id);
+    });
+
+ node.append("title")
+ 			.text(function(d) {return d.id; });
+
+ simulation
+ 			.nodes(graph.nodes)
+            .on("tick", ticked);
+
+ simulation.force("link")
+ 			.links(graph.links);
+
+ function ticked() {
+ link
+ 			.attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) {return d.source.y; })
+      .attr("x2", function(d) {return d.target.x; })
+      .attr("y2", function(d) {return d.target.y; });
+
+ node
+ 			.attr("cx", function(d) {return d.x; })
+      .attr("cy", function(d) {return d.y; });
+
+ text
+ 			.attr("transform", function(d) {return "translate(" + d.x + "," + d.y + ")"; })
+
+	}
+}
+
+function dragstarted(d) {
+	if(!d3.event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+  }
+
+function dragged(d) {
+	d.fx = d3.event.x;
+    d.fy = d3.event.y;
+}
+
+function dragended(d) {
+    if(!d3.event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+}
+
+function zoomed() {
+svg.attr("transform", "translate(" + d3.event.transform.x + "," + d3.event.transform.y + ")" + " scale(" + d3.event.transform.k + ")");
+}
+
+var data = {
+	"nodes": [
+  {
+  	"id": "Lockdown should be mandatory to reduce cases",
+    "type": 7
+  },
+   {
+  	"id": "Lockdown is not demanded as wearing masks is sufficient",
+    "type": 3
+  },
+  {
+  	"id": "70% citizens think lockdown is ineffective to control virus",
+    "type": 7
+  },
+
+  {
+  	"id": "Lockdown should be necessary to control virus",
+    "type": 5
+  },
+      {
+  	"id": "New batman movie was dope",
+    "type": 3
+  },
+  ],
+  "links": [
+  {
+  	"source": "Lockdown is not demanded as wearing masks is sufficient",
+    "target": "Lockdown should be necessary to control virus",
+    "type": 1
+  },
+  {
+  	"source": "70% citizens think lockdown is ineffective to control virus",
+    "target": "Lockdown should be necessary to control virus",
+    "type": 1
+  },
+  {
+  	"source": "70% citizens think lockdown is ineffective to control virus",
+    "target": "Lockdown should be mandatory to reduce cases",
+    "type": 1
+  },
+  {
+  	"source": "Lockdown should be mandatory to reduce cases",
+    "target": "70% citizens think lockdown is ineffective to control virus",
+    "type": 1
+  },
+  ]
+};
+
+createGraph(false, data);
+ </script>
+</html>

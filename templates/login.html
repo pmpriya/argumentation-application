@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html><head>
+		<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" media="all" rel="stylesheet">
+		<link href="{{ url_for('static', filename='css/style1.css') }}" media="all" rel="stylesheet">
+		<meta charset="utf-8">
+		<title> Login </title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body>
+
+	<div class = "container">
+		<div class="pb-2 mt-4 mb-2 border-bottom">
+			<h3 onclick="window.location.href='{{ url_for('index',page=1) }}';"> ARGUPEDIA </h3> </div>
+	<div class = "center">
+		<div class="login"> LOGIN </div>
+		<br>
+				<form id = "form" class="form-register" action="/login" method="post" role="form">
+					<div class="form-wrapper">
+						<input type="text" placeholder="Username" class="form-control" name = "user_name">
+						<i class="zmdi zmdi-account"></i>
+					</div>
+					<br>
+					<div class="form-wrapper">
+						<input type="password" placeholder="Password" class="form-control" name = "password">
+						<i class="zmdi zmdi-lock"></i>
+					</div>
+					<br>
+					<div class="form-wrapper">
+					<button type="submit" class = "btn btn-light btn-space" onclick="loginFunction()">Login
+						<i class="zmdi zmdi-arrow-right"></i>
+					</button>
+					<button type="submit" class = "btn btn-light btn-space"> Cancel
+						<i class="zmdi zmdi-arrow-right"></i>
+					</button>
+					<button type="submit" class = "btn btn-light btn-space" onclick="window.location.href='{{ url_for('register_page') }}';"> Register
+						<i class="zmdi zmdi-arrow-right"></i>
+					</button>
+					</div>
+
+				</form>
+			</div>
+
+		</div>
+
+
+	</body></html>
+
+<style>
+	.center {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+body {
+ background-image: url( {{ url_for('static', filename='images/background2.jpeg') }});
+}
+
+.login {
+  font-family: "Poppins-Regular";
+  color: #FFFFFF;
+  text-align: center;
+  font-size: calc(1.275rem + .3vw);
+  margin-top: 10.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+   }
+
+
+</style>
+
+<script>
+	function loginFunction() {
+		$.ajax({
+            url: '/login',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+
+    	};
+</script>

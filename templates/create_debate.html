@@ -1,0 +1,94 @@
+<html><head>
+		<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" media="all" rel="stylesheet">
+		<link href="{{ url_for('static', filename='css/style1.css') }}" media="all" rel="stylesheet">
+		<meta charset="utf-8">
+		<title> New post </title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body>
+<div class = "container">
+		<div class="pb-2 mt-4 mb-2 border-bottom">
+			<h3 onclick="window.location.href='{{ url_for('index',page=1) }}';"> ARGUPEDIA </h3> </div>
+			<button type="button" class = "btn btn-light float-end btn-space" onclick="window.location.href='{{ url_for('logout') }}';"> Logout </button>
+	<div class = "center">
+		<div class="newpost"> CREATE NEW ARGUMENT </div>
+		<br>
+				<form action="/createArgument" class="form-register" method="post">
+				<div class="form-wrapper">
+				<label for  = "text" class="label"> Create a new topic : </label>
+				<input type="text" class="form-control" name = "topic" id="topic" required>
+				</div>
+				<br>
+				<div class="form-wrapper">
+				<label for  = "text" class="label"> Choose Scheme Structure : </label>
+				<select name="scheme"  id = "scheme" class="form-control" required>
+					<option value="expert"> Expert Scheme </option>
+					<option value="popular"> Popular Scheme </option>
+					<option value="action"> Action Scheme </option>
+				</select>
+				</div>
+				<br>
+				<div class="form-wrapper">
+				<button type="submit" class = "btn btn-light btn-space" onclick="createArgument()"> Create a new Argument
+						<i class="zmdi zmdi-arrow-right"></i> <br>
+				</button>
+				<button type="submit" class = "btn btn-light btn-space" onclick="location.href={{ url_for('index', page=1) }}" class="btn btn-primary" type="button">
+         		Cancel</button>
+				</div>
+				<br>
+				</form>
+			</div>
+	</div>
+    </form>
+</body></html>
+
+<style>
+	.center {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+   body {
+ background-image: url( {{ url_for('static', filename='images/background4.jpeg') }});
+}
+
+.newpost {
+  font-family: "Poppins-Regular";
+  color: #FFFFFF;
+  text-align: center;
+  font-size: calc(1.275rem + .3vw);
+  margin-top: 25.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+   }
+.label {
+font-family: "Poppins-Regular";
+  color: #FFFFFF;
+  }
+
+
+</style>
+
+<script>
+	function createArgument() {
+		$.ajax({
+            url: '/createArgument',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+};
+</script>
+
+
+
+
+

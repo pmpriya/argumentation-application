@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html><head>
+		<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" media="all" rel="stylesheet">
+		<link href="{{ url_for('static', filename='css/style1.css') }}" media="all" rel="stylesheet">
+		<meta charset="utf-8">
+		<title> Register </title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body>
+	<div class = "container">
+		<div class="pb-2 mt-4 mb-2 border-bottom">
+			<h3 onclick="window.location.href='{{ url_for('index',page=1) }}';"> ARGUPEDIA </h3> </div>
+	<div class = "center">
+		<div class="register"> REGISTER </div>
+		<br>
+				<form id = "form" class="form-register" action="/register" method="post" role="form">
+					<div class="form-group">
+						<input type="text" placeholder="First Name" class="form-control" name = "first_name">
+						<input type="text" placeholder="Last Name" class="form-control" name = "last_name">
+
+					</div>
+					<br>
+					<div class="form-wrapper">
+						<input type="text" placeholder="Username" class="form-control" name = "user_name">
+						<i class="zmdi zmdi-account"></i>
+					</div>
+					<br>
+					<div class="form-wrapper">
+						<input type="text" placeholder="Email Address" class="form-control" name = "email">
+						<i class="zmdi zmdi-email"></i>
+					</div>
+					<br>
+					<div class="form-wrapper">
+						<select name="gender" class="form-control">
+							<option value="" disabled="" selected="">Gender</option>
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+							<option value="other">Other</option>
+						</select>
+						<i class="zmdi zmdi-caret-down" style="font-size: 17px"></i>
+					</div>
+					<br>
+					<div class="form-wrapper">
+						<input type="password" placeholder="Password" class="form-control" name = "password">
+						<i class="zmdi zmdi-lock"></i>
+					</div>
+					<br>
+					<div class="form-wrapper">
+						<input type="password" placeholder="Confirm Password" class="form-control" name = "confirm_password">
+						<i class="zmdi zmdi-lock"></i>
+					</div>
+					<br>
+					<div class="form-wrapper">
+					<button type="submit" class = "btn btn-light btn-space" onclick="registerFunction()">Register
+						<i class="zmdi zmdi-arrow-right"></i>
+					</button>
+					<button type="submit" class = "btn btn-light btn-space"> Cancel
+						<i class="zmdi zmdi-arrow-right"></i>
+					</button>
+					</div>
+				</form>
+			</div>
+			</div>
+		</div>
+
+
+</body></html>
+
+<style>
+	.center {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+ .form-group {
+  display: flex; }
+  .form-group input {
+    width: 50%; }
+    .form-group input:first-child {
+      margin-right: 25px; }
+
+ body {
+ background-image: url( {{ url_for('static', filename='images/background2.jpeg') }});
+}
+
+.register {
+  font-family: "Poppins-Regular";
+  color: #FFFFFF;
+  text-align: center;
+  font-size: calc(1.275rem + .3vw);
+  margin-top: 25.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+   }
+
+</style>
+
+<script>
+	function registerFunction() {
+		$.ajax({
+            url: '/register',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+
+    	};
+</script>

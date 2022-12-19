@@ -1,0 +1,197 @@
+
+<html><head>
+		<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" media="all" rel="stylesheet">
+		<link href="{{ url_for('static', filename='css/style1.css') }}" media="all" rel="stylesheet">
+		<link rel="stylesheet" href="{{ url_for('static', filename='dist/upvotejs/upvotejs.css') }}">
+		<meta charset="utf-8">
+		<title> Argupedia </title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body>
+	<div class = "container">
+		<div class="pb-2 mt-4 mb-2 border-bottom">
+		<h3 onclick="window.location.href='{{ url_for('index',page=1) }}';"> ARGUPEDIA </h3> </div>
+		<button type="button" class = "btn btn-light float-end btn-space" onclick="window.location.href='{{ url_for('logout') }}';"> Logout </button>
+		<button type="button" class = "btn btn-light float-end btn-space" onclick="window.location.href='{{ url_for('register_page') }}';"> Register </button>
+		<button type="button" class = "btn btn-light float-end btn-space" onclick="window.location.href='{{ url_for('login_page') }}';"> Login </button>
+		<button type="button" class = "btn btn-light float-end btn-space" onclick="window.location.href='{{ url_for('graph') }}';"> Visualize </button>
+
+		<h6> Start Discussion </h6>
+		<h6> Login or Register to engage </h6>
+		<h6> Discussion Topics and Debates </h6>
+
+		<div class="d-grid gap-2 col-6 mx-auto">
+		<button type="button" class="btn btn-primary" onclick="window.location.href='{{ url_for('create_debate') }}';"> Create Post </button> <br>
+		</div>
+
+
+			{% for arg in args.items: %}
+
+			<a class="link-light" href=""> Argument Topic: {{ arg.topic }} </a>
+			<button id="myBtn" class = "btn btn-light btn-leftspace btn-sm" > Attack Argument </button>
+
+			<div id="myModal" class="modal">
+				<div class="modal-content">
+					<span class="close"> &times; </span>
+					<p class="text-light bg-dark">
+					CQ1 : Are the believed circumstances true? <br>
+					CQ2 : Assuming the circumstances, does the action have the stated consequences? <br>
+					CQ3: Assuming the circumstances and that the action has the stated consequences, <br>
+						will the action bring about the desired goal? <br>
+					CQ4: Does the goal realise the value stated? <br>
+					CQ5: Are there alternative ways of realising the same consequences? <br>
+					</p>
+					<button type="button" class="btn btn-primary btn-lg float-end" onclick="window.location.href='{{ url_for('attackButton') }}';"> Construct Attack Argument </button>
+
+				</div>
+			</div>
+			<p class="text-white">
+				 {{ arg.username }} &nbsp; votes=
+				<b> {{ arg.upvotes }} </b>
+			</p>
+			<div class = "position-absolute start-95">
+					<div id="the-id" class="upvotejs">
+					<a class="upvote"></a>
+					<span class="count"> 0 </span>
+					<a class="downvote"></a>
+				</div></div>
+			<ul> <p class="text-white">
+				<strong> Argument Title: </strong> {{ arg.getArgumentTitle() }} <br>
+				<br> <br>
+				<strong> Argument Description: </strong> {{ arg.getArgumentDescription() }}  <br>
+				<br> <br>
+				<strong> Performs Action: </strong> {{ arg.getAction() }} <br>
+				<br> <br>
+				<strong> Realises Goal: </strong> {{ arg.getGoal() }} <br>
+				<br> <br>
+			</p> </ul>
+			{% endfor %}
+
+		</div>
+
+	<!-- Pagination Links-->
+<div class="text-right">
+    <a href="{{ url_for('index', page=args.prev_num) }}"
+       class="btn btn-outline-light
+       {% if args.page == 1 %}disabled{% endif %}">
+        &laquo;
+    </a>
+<!-- Loop through the number of pages to display a link for each-->
+    {% for page_num in args.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+{% if page_num %}
+<!-- Check for the active page and set the link to "Active"-->
+            {% if args.page == page_num %}
+            <a href="{{ url_for('index', page=page_num) }}"
+               class="btn btn-dark">
+                {{ page_num }}
+            </a>
+            {% else %}
+            <a href="{{ url_for('index', page=page_num) }}"
+               class="btn btn-outline-dark">
+                {{ page_num }}
+            </a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+    <a href="{{ url_for('index', page=args.next_num) }}"
+       class="btn btn-outline-dark
+       {% if args.page == args.pages %}disabled{% endif %}">
+        &raquo;
+    </a>
+</div>
+<p class="text-right mt-3">
+   Showing page {{ args.page }} of {{ args.pages }}
+</p>
+
+<script type="text/javascript"
+		href="../js/jquery.js"> </script>
+<script type="text/javascript"
+		href="../js/bootstrap.min.js"> </script>
+<script src="../static/dist/upvotejs/upvotejs.vanilla.js"></script>
+
+
+</body></html>
+
+
+<script>
+
+	// an upvote widget controller
+	Upvote.create("the-id");
+
+
+	var modal = document.getElementById("myModal");
+	var btn = document.getElementById("myBtn");
+	var span = document.getElementsByClassName("close")[0];
+
+
+	btn.onclick = function() {
+	modal.style.display = "block";
+	}
+
+	span.onclick = function() {
+	  modal.style.display = "none";
+	}
+	window.onclick = function(event) {
+	  if (event.target == modal) {
+		modal.style.display = "none";
+	  }
+	}
+
+</script>
+
+<style>
+	/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+body {
+ background-image: url( {{ url_for('static', filename='images/background1.png') }});
+}
+
+.arrows{
+margin-left: -900px;
+}
+
+.text-white {
+margin-left: 10;
+}
+
+
+</style>

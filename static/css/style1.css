@@ -1,0 +1,26 @@
+h3 {
+  font-family: "Poppins-Regular";
+  color: #FFFFFF;
+  font-weight: bold;
+   }
+
+.btn-light:hover, .btn-light:focus, .btn-light:active, .btn-light.active, .open>.dropdown-toggle.btn-light {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-space {
+    margin-right: 5px;
+}
+
+.btn-leftspace{
+    margin-left: 15px;
+}
+
+h6 {
+    font-family: "Poppins-Regular";
+  color: #FFFFFF;
+}
+
+
