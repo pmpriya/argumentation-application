@@ -6,4 +6,4 @@ The objective of this project is to implement a platform that allows users to in
 
 The purpose of this project is to produce a user-friendly and interface-focused platform that allows users to share and pen their opinions and interact with one another through argumentation and structured expression of their individual viewpoints. Argupedia assits in the formation of arguments by providing accurate and well-versed evidences to back up statements. And finally, Argumentation will allow people to reason with one another, builds confidence in addressing controversial issues, resulting in knowledge driven discussions and reflection.
 
-For detailed application report kindly email : pm.priya@outlook.com
+For detailed application report, get in touch : pm.priya@outlook.com
